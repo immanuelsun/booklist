@@ -8,20 +8,41 @@ function Book(title, author, isbn) {
 // UI Constructor
 function UI() {}
 
-// Add book to list
+// Add Book To List
 UI.prototype.addBookToList = function (book) {
   const list = document.getElementById('book-list')
   // Create tr element
   const row = document.createElement('tr')
   // Insert cols
-   row.innerHTML = `
+  row.innerHTML = `
     <td>${book.title}</td>
     <td>${book.author}</td>
     <td>${book.isbn}</td>
-    <td><a href="#" class="delete">X</a></td>
-   `
+    <td><a href="#" class="delete">X<a></td>
+  `
 
   list.appendChild(row)
+}
+
+// Show Alert
+UI.prototype.showAlert = function (message, className) {
+  // Add div
+  const div = document.createElement('div')
+  // Add class names
+  div.className = `alert ${className}`
+  // Get the message text
+  div.appendChild(document.createTextNode(message))
+  // Get parent
+  const container = document.querySelector('.container')
+  // Get form
+  const form = document.querySelector('#book-form')
+  // Insert the alert div
+  container.insertBefore(div, form)
+
+  // Timeout after 3 sec
+  setTimeout(() => {
+    document.querySelector('.alert').remove()
+  }, 3000)
 }
 
 // Clear Fields
@@ -33,9 +54,10 @@ UI.prototype.clearFields = function () {
 
 // Event Listeners
 document.getElementById('book-form').addEventListener('submit', function (e) {
+  // Get form values
   const title = document.getElementById('title').value,
-        author = document.getElementById('author').value,
-        isbn = document.getElementById('isbn').value
+    author = document.getElementById('author').value,
+    isbn = document.getElementById('isbn').value
 
   // Instantiate book
   const book = new Book(title, author, isbn)
@@ -43,11 +65,16 @@ document.getElementById('book-form').addEventListener('submit', function (e) {
   // Instantiate UI
   const ui = new UI()
 
-  // Add book to list
-  ui.addBookToList(book)
+  if (title === '' || author === '' || isbn === '') {
+    // Show alert
+    ui.showAlert('Please fill in all the fileds', 'error')
+  } else {
+    // Add book to list
+    ui.addBookToList(book)
 
-  // Clear Fields
-  ui.clearFields()
+    // Clear fields
+    ui.clearFields()
+  }
 
   e.preventDefault()
 })
