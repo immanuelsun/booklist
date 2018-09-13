@@ -1,0 +1,6 @@
+# Files
+.exlintrc.js
+
+# Foldres
+node_modules/
+.vscode/
